@@ -38,29 +38,6 @@ Data is **not** stored in the repo: the notebooks download it from SNAP.
 | Department networks | 4 largest departments (IDs 4, 14, 1, 21), each = subgraph induced by its members |
 | Random seed | 42 |
 
-## How to use the shared loader (Google Colab)
-
-Put this in the first cell of your notebook:
-
-```python
-# Download the data and the shared loader
-!mkdir -p data
-!wget -q -P data https://snap.stanford.edu/data/email-Eu-core.txt.gz
-!wget -q -P data https://snap.stanford.edu/data/email-Eu-core-department-labels.txt.gz
-!wget -q https://raw.githubusercontent.com/foadas/network-analysis-email-eu/main/load_networks.py
-```
-
-Then, in the next cell:
-
-```python
-from load_networks import SEED, load_all, load_whole
-
-nets = load_all()      # {"whole": G, "dept4": ..., "dept14": ..., "dept1": ..., "dept21": ...}
-G = nets["whole"]      # whole network, department of node n: G.nodes[n]["dept"]
-```
-
-Expected sizes: `whole` 1,005 nodes / 24,929 edges; `dept4` 109 / 1,167; `dept14` 92 / 1,506; `dept1` 65 / 502; `dept21` 61 / 601.
-
 ## Tools
 
 Python with [NetworkX](https://networkx.org/) (measures), pandas, matplotlib; Gephi (figures).
