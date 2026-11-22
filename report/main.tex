@@ -43,7 +43,7 @@ not depend on what people remember \cite{borgatti2018}.
 
 The dataset we use was published together with studies on how networks grow
 over time \cite{leskovec2007} and on algorithms that find groups in a network
-\cite{yin2017}. In those studies the department of each person is used to check
+\cite{yin2017}. The second study uses the department of each person to check
 whether an algorithm finds the right groups. We use the same information for a
 different goal: to compare the official departments with the way people
 actually communicate.
@@ -76,8 +76,8 @@ the departments with the groups that appear from the e-mails.
 The main contributions of the project are:
 \begin{itemize}
   \item a description of the structure of the whole institution and of its four
-        largest departments, where each measure is compared with random networks
-        of the same size;
+        largest departments, where the main measures are compared with random
+        networks of the same size;
   \item a list of the most central members and of the people who connect
         different departments;
   \item a statistical test of whether people in the same department e-mail each
@@ -112,76 +112,88 @@ To answer RQ1 we describe the structure of the whole network and compare it
 with the four largest departments (IDs 4, 14, 1 and 21). Each department is
 analysed as the network of e-mails sent among its own members. All measures
 were computed with NetworkX and are shown in Table~\ref{tab:structure}.
-Clustering and distance measures are defined for undirected networks, so for
-these we made the networks undirected with the OR rule (two people are linked
-if at least one of them e-mailed the other). We also computed them only on the
-largest connected component (LCC), because there is no distance between people
-who are not connected.
+Clustering and distance measures are usually computed on undirected networks,
+so for these we made the networks undirected with the OR rule (two people are
+linked if at least one of them e-mailed the other). We computed distances only
+on the largest connected component (LCC), because there is no distance between
+people who are not connected.
 
 \textbf{Density and reciprocity.} We first look at how many connections exist
-and whether people answer each other. Density, the share of all possible
+and whether links go in both directions. Density, the share of all possible
 sender--receiver pairs that really exist, is low in the whole network (0.025):
-on average a member writes to about 25 of the other 1{,}004 members.
-Departments have a higher density (0.099--0.180), but density always becomes
-higher when a network is smaller, so this mostly shows that departments are
-smaller, not that their members write more \cite{borgatti2018}. For this reason
-we compare departments mainly with measures that do not depend on size.
-Reciprocity, the share of links that also exist in the opposite direction, is
-high everywhere (0.68--0.82): when a person writes to a colleague, the
-colleague usually writes back. So e-mail in this institution is mostly used for
-two-way conversations, not for one-way announcements. Department~21 has the
-highest reciprocity.
+on average a member writes to about 25 of the other 1{,}004 members. In the
+departments density is four to seven times higher (0.099--0.180). A group of
+the same size chosen at random from the institution would have about the same
+density as the whole network, so this difference is not an effect of size:
+members write much more to colleagues of their own department than to other
+members, a result tested in Section~\ref{sec:departments}. Reciprocity, the
+share of links that also exist in the opposite direction, is high everywhere
+(0.68--0.82). In a random network it would be equal to the density (0.025 for
+the whole network), so it is about 28 times higher than chance. Most e-mail
+links therefore go both ways: when a person writes to a colleague, the
+colleague usually also writes to them. Department~21 has the highest
+reciprocity.
 
 \textbf{Connectivity.} If we ignore the direction of e-mails, 98.1\% of the
-members are in one connected component, so almost everyone can reach everyone
-else through a chain of colleagues. If we follow the direction of e-mails, the
-largest strongly connected component includes 79.9\% of the members. Of the
-other 20.1\%, most (18.2\%) can reach this group or be reached from it, but not
-both: they only send e-mails towards it or only receive e-mails from it. The
-remaining 1.9\% (19 members) send and receive no e-mail at all. Inside
-departments the network is less connected: in departments~21 and~1, 24.6\% and
-13.8\% of the members are outside the largest connected component of their
-department network. These members are not all in the same situation: some
-e-mail only people of other departments, some send no e-mail at all, and a few
-form a small separate group inside their department (Section~\ref{sec:departments}).
+members are in one connected component, so almost everyone is linked to
+everyone else through a chain of colleagues. If we follow the direction of
+e-mails, the largest strongly connected component includes 79.9\% of the
+members. Of the other 20.1\%, 19 members (1.9\%) send and receive no e-mail at
+all, while the rest are linked to this group but cannot both reach it and be
+reached from it. Inside departments the network is less connected. In
+departments~1 and~21 only about half of the members (58.5\% and 52.5\%) can
+reach each other by following e-mails, and 13.8\% and 24.6\% of the members
+are outside the department LCC. These members are not all in the same
+situation: some e-mail only people of other departments, some send no e-mail at
+all, and a few form a small separate group (Section~\ref{sec:departments}).
 
 \textbf{Small-world structure.} Next, we check whether the network has close
-groups of colleagues and, at the same time, short paths between any two people.
-This is called the small-world property \cite{watts1998}. We measure how close
-the groups are with the average clustering coefficient, the probability that
-two contacts of a person also e-mail each other. We measure how far people are
-with the average shortest path length, the average number of e-mail steps
-between two people \cite{newman2018}. These numbers only make sense if we
-compare them with random networks of the same size, so for each network we
-computed the average over ten random Erdős–Rényi networks $G(n,m)$ with the
-same number of nodes and edges. In the whole network the clustering is 0.407,
-against 0.033 in the random networks (about twelve times higher), while the
-average path is only a little longer (2.59 against 2.30) and the diameter is 7.
-So two members are on average less than three steps apart, even though people
-form close groups. The coefficient $\sigma = (C/C_{rand})/(L/L_{rand})$ is 10.8,
-much higher than 1, which is the threshold for a small-world network. However,
-$\sigma$ becomes larger when the network is bigger, so to compare the
-departments we used the coefficient $\omega$, as implemented in NetworkX. It is
-close to 0 for small-world networks, negative for networks similar to a regular
-grid (lattice) and positive for networks similar to random ones. We computed
-it with 10 random and 10 lattice comparison networks (5 rewiring iterations).
-All four departments have $\omega$ close to 0 (from $-0.11$ to $+0.06$), so they
-are also small-world networks. Department~1 has the lowest value
-($\omega=-0.11$): it is the department most similar to a lattice, with close
-groups and slightly longer paths between them, but the difference is small.
+groups of colleagues and, at the same time, short paths between people. This is
+called the small-world property \cite{watts1998}. We measure how close the
+groups are with the average clustering coefficient, the probability that two
+contacts of a person are also linked. We measure how far people are with the
+average shortest path length, the average number of steps between two people
+\cite{newman2018}. These numbers only make sense if we compare them with random
+networks of the same size, so for each network we computed the average over
+ten random Erdős–Rényi networks $G(n,m)$ with the same number of nodes and
+edges. In the whole network the clustering is 0.407, against 0.033 in the
+random networks (about twelve times higher), while the average path is only a
+little longer (2.59 against 2.30) and the diameter is 7. Ignoring the direction
+of e-mails, two connected members are therefore on average less than three
+steps apart, even though people form close groups. The coefficient
+$\sigma = (C/C_{rand})/(L/L_{rand})$ is 10.8; values above 1 indicate a
+small-world network. Transitivity, the share of closed triangles in the whole
+undirected network, is lower (0.267) than the average clustering, because the
+contacts of very active members are less often linked to each other than the
+contacts of other members.
+
+Because $\sigma$ becomes larger when the network is bigger, we compared the
+departments with two other measures. First, the ratio $C/C_{rand}$ shows how
+much more clustered a department is than chance: department~4 is the most
+clustered (3.2 times the random value), followed by departments~1 (2.8), 14
+(2.1) and 21 (1.9). The raw clustering gives the opposite order, because small
+and dense departments have high clustering even at random. Second, we used the
+coefficient $\omega$ as implemented in NetworkX, which compares the network
+with 10 random networks that keep the degree of every node and with 10
+lattice-like networks. It is close to 0 for small-world networks, negative for
+networks similar to a regular grid (lattice) and positive for networks similar
+to random ones. All four departments have $\omega$ close to 0 (from $-0.11$ to
+$+0.06$), so they are also small-world networks. Department~1 has the lowest
+value ($\omega=-0.11$), so it is the most similar to a lattice, but the
+difference is small.
 
 \textbf{Degree distribution.} Finally, we check whether contacts are spread
 evenly or concentrated in a few people. Figure~\ref{fig:degree} shows the
 in-degree (from how many colleagues a person receives e-mails) and the
 out-degree (to how many colleagues a person writes) on log-log axes. In the
-whole network both distributions have a long tail: most members write to a few
-dozen colleagues, while a few members exchange e-mails with more than 100, and
-up to more than 300, people. These members are good candidates for the central
-roles studied in Section~\ref{sec:centrality}. We thought about testing whether
-the network is scale-free by fitting a power law, but with about 1{,}000 nodes
-there are too few points in the tail for a reliable result \cite{newman2018},
-so we only say that the distribution has a long tail. The department networks
-are too small to show a clear shape.
+whole network both distributions have a long tail: most members have a small or
+moderate number of contacts, while a few have more than 100 (up to about 210
+for in-degree and more than 300 for out-degree). These members are good
+candidates for the central roles studied in Section~\ref{sec:centrality}. We
+did not test whether the network is scale-free by fitting a power law, because
+with about 1{,}000 nodes there are too few points in the tail for a reliable
+result \cite{newman2018}; we only say that the distribution has a long tail.
+The department networks are too small to show a clear shape.
 
 \begin{table}[ht]
 \centering
@@ -208,10 +220,11 @@ $\omega$                      & --    & $0.063$ & $0.063$ & $-0.106$ & $-0.014$ 
 \bottomrule
 \end{tabular}
 \caption{Structural measures of the whole network and of the four largest
-departments. Clustering, path lengths, diameter, $\sigma$ and $\omega$ are
-computed on the undirected (OR) largest connected component; random baselines
-average ten $G(n,m)$ graphs of the same size. $\omega$ was not computed for the
-whole network because of its computational cost.}
+departments. Density, reciprocity and SCC share use the directed network;
+transitivity uses the whole undirected (OR) network; average clustering, path
+lengths, diameter, $\sigma$ and $\omega$ use the undirected largest connected
+component. Random baselines average ten $G(n,m)$ networks of the same size.
+$\omega$ was not computed for the whole network because of its computing time.}
 \label{tab:structure}
 \end{table}
 
@@ -219,8 +232,9 @@ whole network because of its computational cost.}
 \centering
 \includegraphics[width=\textwidth]{degree_distribution.png}
 \caption{In-degree (left) and out-degree (right) distributions on log-log
-axes. The whole network (blue) shows a heavy tail: few members exchange
-e-mails with more than 100 colleagues.}
+axes for the whole network (blue) and the four largest departments (other
+colours; ``dept4'' = Department~4). Members with degree 0 are not shown. The
+whole network has a long tail: a few members have more than 100 contacts.}
 \label{fig:degree}
 \end{figure}
 
@@ -240,13 +254,18 @@ e-mails with more than 100 colleagues.}
 
 \subsection{RQ1: network structure}
 The e-mail network of the institution is a small-world network: members form
-close groups, but any two of them are on average less than three e-mail steps
-apart, and most e-mails are answered. This structure helps both teamwork inside
-groups and the fast spread of information in the whole institution. The
-departments show the same pattern on a smaller scale; department~1 is the
-most similar to a lattice, but only slightly. In department~21, one member in six (10 of 61) e-mails only people of
-other departments and never a colleague of their own. This is a first sign that the official
-departments and the real communication do not completely match.
+close groups, yet, ignoring the direction of e-mails, two connected members are
+on average less than three steps apart, and most e-mail links go both ways.
+This structure can support both teamwork inside groups and the fast spread of
+information in the whole institution. The four largest departments share the
+same basic pattern: they are small-world and highly reciprocal. They differ,
+however, in how clustered they are compared with chance (department~4 the
+most, department~21 the least) and in how connected they are: in
+departments~1 and~21 only about half of the members can reach each other by
+following e-mails. Department density is four to seven times the density of the
+institution, and in department~21 one member in six (10 of 61) e-mails only
+people of other departments. Departments therefore matter for communication,
+but they do not contain all of it.
 
 % TODO 6.2 (Person 2), 6.3 (Person 3)
 
@@ -255,19 +274,22 @@ departments and the real communication do not completely match.
 
 \subsection{RQ1: network structure}
 This part of the study has three limits. First, the network only records
-whether two people exchanged at least one e-mail, so one single message counts
-as much as daily contact. A weighted network, for example built from the
-version of the dataset with timestamps, would show how strong each connection
-is. Second, the department networks are small (61--109 members), so it is hard
-to compare their density and degree distribution with the whole network, and
-their results are less certain. Third, because of its computing time,
-$\omega$ was not computed for the whole network, so for the whole network the
-small-world result relies only on $\sigma$, which tends to grow with network
-size.
+whether two people exchanged at least one e-mail over the whole period, so one
+single message counts as much as daily contact, and a short path in the network
+may not be possible in time order. A weighted network built from the version
+of the dataset with timestamps would show how strong and when each connection
+is. Second, the $G(n,m)$ random networks give every member a similar number of
+contacts, while real degrees are very uneven; random networks that keep the
+real degrees, as used for $\omega$, are a stricter baseline, but we could not
+compute them for the whole network because of the computing time. Third, the
+department networks are small (61--109 members) and keep only the e-mails
+inside each department, so their results are less certain and say nothing
+about contacts with other departments, which are studied in
+Section~\ref{sec:departments}.
 
 % TODO 7.2 (Person 2), 7.3 (Person 3)
 
-\begin{thebibliography}{9}
+\begin{thebibliography}{99}
 \bibitem{borgatti2018} S.~P. Borgatti, M.~G. Everett, J.~C. Johnson.
   \emph{Analyzing Social Networks}. Sage, 2018.
 \bibitem{leskovec2007} J.~Leskovec, J.~Kleinberg, C.~Faloutsos. Graph evolution:
