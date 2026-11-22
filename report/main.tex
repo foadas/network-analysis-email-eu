@@ -135,12 +135,15 @@ highest reciprocity.
 \textbf{Connectivity.} If we ignore the direction of e-mails, 98.1\% of the
 members are in one connected component, so almost everyone can reach everyone
 else through a chain of colleagues. If we follow the direction of e-mails, the
-largest strongly connected component still includes 79.9\% of the members; the
-other members only send e-mails to this group or only receive e-mails from it.
-Inside departments the situation is different: in departments~21 and~1, 24.6\%
-and 13.8\% of the members do not exchange any e-mail with people of their own
-department. This suggests that part of their communication goes to other
-departments (see Section~\ref{sec:departments}).
+largest strongly connected component includes 79.9\% of the members. Of the
+other 20.1\%, most (18.2\%) can reach this group or be reached from it, but not
+both: they only send e-mails towards it or only receive e-mails from it. The
+remaining 1.9\% (19 members) send and receive no e-mail at all. Inside
+departments the network is less connected: in departments~21 and~1, 24.6\% and
+13.8\% of the members are outside the largest connected component of their
+department network. These members are not all in the same situation: some
+e-mail only people of other departments, some send no e-mail at all, and a few
+form a small separate group inside their department (Section~\ref{sec:departments}).
 
 \textbf{Small-world structure.} Next, we check whether the network has close
 groups of colleagues and, at the same time, short paths between any two people.
@@ -161,8 +164,8 @@ $\sigma$ becomes larger when the network is bigger, so to compare the
 departments we used the coefficient $\omega$, as implemented in NetworkX. It is
 close to 0 for small-world networks, negative for networks similar to a regular
 grid (lattice) and positive for networks similar to random ones. Departments 4,
-14 and 21 have $\omega$ between $-0.03$ and $0.00$, so they are also
-small-world networks. Department~1 ($\omega=-0.15$) is closer to a lattice: its
+14 and 21 have $\omega$ close to 0 (from $-0.03$ to $+0.001$), so they are
+also small-world networks. Department~1 ($\omega=-0.15$) is closer to a lattice: its
 members form small, very close groups, and the paths between these groups are
 longer.
 
@@ -241,8 +244,8 @@ apart, and most e-mails are answered. This structure helps both teamwork inside
 groups and the fast spread of information in the whole institution. The
 departments show the same pattern on a smaller scale, with one exception:
 department~1 is closer to a lattice, with small groups connected by longer
-paths. In two of the four departments, many members do not communicate with any
-colleague of their own department. This is a first sign that the official
+paths. In department~21, one member in six (10 of 61) e-mails only people of
+other departments and never a colleague of their own. This is a first sign that the official
 departments and the real communication do not completely match.
 
 % TODO 6.2 (Person 2), 6.3 (Person 3)
