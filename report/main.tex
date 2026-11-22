@@ -163,11 +163,12 @@ much higher than 1, which is the threshold for a small-world network. However,
 $\sigma$ becomes larger when the network is bigger, so to compare the
 departments we used the coefficient $\omega$, as implemented in NetworkX. It is
 close to 0 for small-world networks, negative for networks similar to a regular
-grid (lattice) and positive for networks similar to random ones. Departments 4,
-14 and 21 have $\omega$ close to 0 (from $-0.03$ to $+0.001$), so they are
-also small-world networks. Department~1 ($\omega=-0.15$) is closer to a lattice: its
-members form small, very close groups, and the paths between these groups are
-longer.
+grid (lattice) and positive for networks similar to random ones. We computed
+it with 10 random and 10 lattice comparison networks (5 rewiring iterations).
+All four departments have $\omega$ close to 0 (from $-0.11$ to $+0.06$), so they
+are also small-world networks. Department~1 has the lowest value
+($\omega=-0.11$): it is the department most similar to a lattice, with close
+groups and slightly longer paths between them, but the difference is small.
 
 \textbf{Degree distribution.} Finally, we check whether contacts are spread
 evenly or concentrated in a few people. Figure~\ref{fig:degree} shows the
@@ -203,7 +204,7 @@ Avg.\ shortest path $L$       & 2.587 & 2.165 & 1.830 & 2.450 & 1.788 \\
 Random avg.\ shortest path $L_{rand}$ & 2.296 & 1.948 & 1.754 & 1.852 & 1.660 \\
 Diameter                      & 7     & 5     & 4     & 5     & 4     \\
 $\sigma$                      & 10.84 & 2.88  & 2.00  & 2.08  & 1.78  \\
-$\omega$                      & --    & $-0.025$ & $-0.003$ & $-0.149$ & $0.001$ \\
+$\omega$                      & --    & $0.063$ & $0.063$ & $-0.106$ & $-0.014$ \\
 \bottomrule
 \end{tabular}
 \caption{Structural measures of the whole network and of the four largest
@@ -242,9 +243,8 @@ The e-mail network of the institution is a small-world network: members form
 close groups, but any two of them are on average less than three e-mail steps
 apart, and most e-mails are answered. This structure helps both teamwork inside
 groups and the fast spread of information in the whole institution. The
-departments show the same pattern on a smaller scale, with one exception:
-department~1 is closer to a lattice, with small groups connected by longer
-paths. In department~21, one member in six (10 of 61) e-mails only people of
+departments show the same pattern on a smaller scale; department~1 is the
+most similar to a lattice, but only slightly. In department~21, one member in six (10 of 61) e-mails only people of
 other departments and never a colleague of their own. This is a first sign that the official
 departments and the real communication do not completely match.
 
@@ -260,9 +260,10 @@ as much as daily contact. A weighted network, for example built from the
 version of the dataset with timestamps, would show how strong each connection
 is. Second, the department networks are small (61--109 members), so it is hard
 to compare their density and degree distribution with the whole network, and
-their results are less certain. Third, to save computing time we computed
-$\omega$ with few random networks and did not compute it for the whole network;
-more random networks would make the small-world result more reliable.
+their results are less certain. Third, because of its computing time,
+$\omega$ was not computed for the whole network, so for the whole network the
+small-world result relies only on $\sigma$, which tends to grow with network
+size.
 
 % TODO 7.2 (Person 2), 7.3 (Person 3)
 
