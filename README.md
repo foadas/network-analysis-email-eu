@@ -18,9 +18,13 @@ its official departments with the way people actually communicate.
 load_networks.py                  shared loader: everyone uses it to build the same networks
 notebooks/
   NA_01_structure_RQ1.ipynb       RQ1 (Section 5.1): network structure, small-world, degree distribution
+  NA_02_RQ2.ipynb                 Section 3 dataset table + RQ2 (Section 5.2): centrality, bridges
+  NA_03_RQ3.ipynb                 RQ3 (Section 5.3): departments as communication boundaries
 report/
   main.tex                        report (LaTeX, official template, 3cm margins)
-  degree_distribution.png         Figure 1
+  person2_sections.tex            Sections 3, 5.2, 6.2, 7.2 (to merge into main.tex)
+  person3_sections.tex            Sections 4, 5.3, 6.3, 7.3 (to merge into main.tex)
+  *.png                           figures
 ```
 
 Data is **not** stored in the repo: the notebooks download it from SNAP.
