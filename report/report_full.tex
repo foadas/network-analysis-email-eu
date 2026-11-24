@@ -1,0 +1,512 @@
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[12pt, a4paper]{article}
+% NOTE: the course page requires 3cm margins (the original template had 1in)
+\usepackage[a4paper,margin=3cm]{geometry}
+\setlength\parindent{0pt}
+\usepackage{mathptmx}
+\usepackage{amsmath,amssymb}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+\usepackage{booktabs}   % nicer tables
+\usepackage{graphicx}   % figures
+
+\author{Name1 Surname1, Degree Programme, ID number (matricola)
+\\Name2 Surname2, Degree Programme, ID number (matricola)
+\\Name3 Surname3, Degree Programme, ID number (matricola)
+\\Name4 Surname4, Degree Programme, ID number (matricola)
+\\Name5 Surname5, Degree Programme, ID number (matricola)}
+\date{}
+\title{Formal Departments and Informal Communication:\\
+A Network Analysis of E-mail in a European Research Institution}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+\label{introduction}
+
+This project uses social network analysis to study communication inside an
+organisation. In particular, we analyse the e-mails exchanged among the members
+of a European research institution.
+
+An organisation can be described in two ways. The first is its official
+structure: every person belongs to a department, and departments are the units
+where work is organised. The second is how people really work together: whom
+they talk to and exchange information with. These two do not always match,
+because people often need to work with colleagues outside their own department.
+E-mail data is a good way to observe the second structure: it is recorded
+automatically, it covers the whole organisation, and, unlike a survey, it does
+not depend on what people remember \cite{borgatti2018}.
+
+The dataset we use was published together with studies on how networks grow
+over time \cite{leskovec2007} and on algorithms that find groups in a network
+\cite{yin2017}. The second study uses the department of each person to check
+whether an algorithm finds the right groups. We use the same information for a
+different goal: to compare the official departments with the way people
+actually communicate.
+
+\section{Problem and Motivation}
+\label{problem-and-motivation}
+
+The problem we study is whether the division of a research institution into
+departments affects whom its members e-mail, and how much. This question is
+interesting for two reasons. In theory, it checks whether the official borders
+between departments are also borders for communication. In practice, it shows
+where information moves easily and where it may get stuck: a department whose
+members write only to each other can become isolated, while the few people who
+connect different departments become very important, because information
+between departments depends on them.
+
+We split the problem into three research questions:
+\begin{itemize}
+  \item \textbf{RQ1:} What is the overall structure of the e-mail network, and
+        do departments differ structurally?
+  \item \textbf{RQ2:} Who are the central actors, and who bridges departments?
+  \item \textbf{RQ3:} Are departments real boundaries of communication?
+\end{itemize}
+
+RQ1 looks at the network as a whole: how connected it is, whether people answer
+each other's e-mails, and how fast information can spread. RQ2 looks at single
+people and finds who has the most important positions. RQ3 directly compares
+the departments with the groups that appear from the e-mails.
+
+The main contributions of the project are:
+\begin{itemize}
+  \item a description of the structure of the whole institution and of its four
+        largest departments, where the main measures are compared with random
+        networks of the same size;
+  \item a list of the most central members and of the people who connect
+        different departments;
+  \item a statistical test of whether people in the same department e-mail each
+        other more, and a comparison between the groups found from the e-mails
+        and the official departments.
+\end{itemize}
+
+\section{Datasets}
+\label{datasets}
+
+% TODO (Person 2)
+How did you gather the data? Did you digitise it? How? Is the material
+publicly available? What tools did you use 1) to handle (store,
+manipulate) the data and 2) to compute measures on the data?
+
+\section{Validity and Reliability}
+\label{validity-and-reliability-not-needed-for-the-project-proposal}
+
+\textbf{Validity.} We use e-mail as a proxy for working relationships, and
+this proxy has four limits. First, an edge only records that at least one
+e-mail was sent, so a single message, such as a reply to an announcement,
+counts as much as daily collaboration; some edges are therefore not real
+working relationships (errors of commission) \cite{borgatti2018}. Second, the
+data only covers e-mails among members of the institution: e-mails with
+outsiders, meetings, phone calls and chat are missing (errors of omission).
+So 19 members (1.9\%) appear as isolated nodes, although they surely
+communicate in other ways. Third, the data is anonymised, so we cannot check
+members' roles or when the e-mails were sent. Fourth, we take the department labels as
+given: each member belongs to exactly one of 42 departments, even if some
+people may work for two units, and 7 departments have fewer than five
+members, which makes their measures unstable. The network is therefore a
+valid picture of \emph{who} e-mails \emph{whom} inside the institution, but a
+weaker picture of how strongly people work together.
+
+\textbf{Reliability.} The study can be repeated exactly. The data is public
+(Section~\ref{datasets}) and all group members built the networks with the
+same code and rules, published in our GitHub repository. As an independent
+check, our whole network has 24{,}929 directed edges after removing
+self-loops, the same number of static edges that SNAP reports for the
+timestamped version of the dataset. Every random procedure (baselines, permutations, Louvain,
+rewiring) uses the fixed seed 42; re-running the full RQ3 notebook reproduced
+every value of the first run exactly. All measures
+were computed in Python with NetworkX 3.7.
+
+\section{Measures and Results}
+\label{measures}
+
+% ------------------------------------------------------------------
+\subsection{Network structure (RQ1)}
+\label{sec:structure}
+% ------------------------------------------------------------------
+
+To answer RQ1 we describe the structure of the whole network and compare it
+with the four largest departments (IDs 4, 14, 1 and 21). Each department is
+analysed as the network of e-mails sent among its own members. All measures
+were computed with NetworkX and are shown in Table~\ref{tab:structure}.
+Clustering and distance measures are usually computed on undirected networks,
+so for these we made the networks undirected with the OR rule (two people are
+linked if at least one of them e-mailed the other). We computed distances only
+on the largest connected component (LCC), because there is no distance between
+people who are not connected.
+
+\textbf{Density and reciprocity.} We first look at how many connections exist
+and whether links go in both directions. Density, the share of all possible
+sender--receiver pairs that really exist, is low in the whole network (0.025):
+on average a member writes to about 25 of the other 1{,}004 members. In the
+departments density is four to seven times higher (0.099--0.180). A group of
+the same size chosen at random from the institution would have about the same
+density as the whole network, so this difference is not an effect of size:
+members write much more to colleagues of their own department than to other
+members, a result tested in Section~\ref{sec:departments}. Reciprocity, the
+share of links that also exist in the opposite direction, is high everywhere
+(0.68--0.82). In a random network it would be equal to the density (0.025 for
+the whole network), so it is about 28 times higher than chance. Most e-mail
+links therefore go both ways: when a person writes to a colleague, the
+colleague usually also writes to them. Department~21 has the highest
+reciprocity.
+
+\textbf{Connectivity.} If we ignore the direction of e-mails, 98.1\% of the
+members are in one connected component, so almost everyone is linked to
+everyone else through a chain of colleagues. If we follow the direction of
+e-mails, the largest strongly connected component includes 79.9\% of the
+members. Of the other 20.1\%, 19 members (1.9\%) send and receive no e-mail at
+all, while the rest are linked to this group but cannot both reach it and be
+reached from it. Inside departments the network is less connected. In
+departments~1 and~21 only about half of the members (58.5\% and 52.5\%) can
+reach each other by following e-mails, and 13.8\% and 24.6\% of the members
+are outside the department LCC. These members are not all in the same
+situation: some e-mail only people of other departments, some send no e-mail at
+all, and a few form a small separate group (Section~\ref{sec:departments}).
+
+\textbf{Small-world structure.} Next, we check whether the network has close
+groups of colleagues and, at the same time, short paths between people. This is
+called the small-world property \cite{watts1998}. We measure how close the
+groups are with the average clustering coefficient, the probability that two
+contacts of a person are also linked. We measure how far people are with the
+average shortest path length, the average number of steps between two people
+\cite{newman2018}. These numbers only make sense if we compare them with random
+networks of the same size, so for each network we computed the average over
+ten random Erdős–Rényi networks $G(n,m)$ with the same number of nodes and
+edges. In the whole network the clustering is 0.407, against 0.033 in the
+random networks (about twelve times higher), while the average path is only a
+little longer (2.59 against 2.30) and the diameter is 7. Ignoring the direction
+of e-mails, two connected members are therefore on average less than three
+steps apart, even though people form close groups. The coefficient
+$\sigma = (C/C_{rand})/(L/L_{rand})$ is 10.8; values above 1 indicate a
+small-world network. Transitivity, the share of closed triangles in the whole
+undirected network, is lower (0.267) than the average clustering, because the
+contacts of very active members are less often linked to each other than the
+contacts of other members.
+
+Because $\sigma$ becomes larger when the network is bigger, we compared the
+departments with two other measures. First, the ratio $C/C_{rand}$ shows how
+much more clustered a department is than chance: department~4 is the most
+clustered (3.2 times the random value), followed by departments~1 (2.8), 14
+(2.1) and 21 (1.9). The raw clustering gives the opposite order, because small
+and dense departments have high clustering even at random. Second, we used the
+coefficient $\omega$ as implemented in NetworkX, which compares the network
+with 10 random networks that keep the degree of every node and with 10
+lattice-like networks. It is close to 0 for small-world networks, negative for
+networks similar to a regular grid (lattice) and positive for networks similar
+to random ones. All four departments have $\omega$ close to 0 (from $-0.11$ to
+$+0.06$), so they are also small-world networks. Department~1 has the lowest
+value ($\omega=-0.11$), so it is the most similar to a lattice, but the
+difference is small.
+
+\textbf{Degree distribution.} Finally, we check whether contacts are spread
+evenly or concentrated in a few people. Figure~\ref{fig:degree} shows the
+in-degree (from how many colleagues a person receives e-mails) and the
+out-degree (to how many colleagues a person writes) on log-log axes. In the
+whole network both distributions have a long tail: most members have a small or
+moderate number of contacts, while a few have more than 100 (up to about 210
+for in-degree and more than 300 for out-degree). These members are good
+candidates for the central roles studied in Section~\ref{sec:centrality}. We
+did not test whether the network is scale-free by fitting a power law, because
+with about 1{,}000 nodes there are too few points in the tail for a reliable
+result \cite{newman2018}; we only say that the distribution has a long tail.
+The department networks are too small to show a clear shape.
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{lrrrrr}
+\toprule
+ & Whole & Dept 4 & Dept 14 & Dept 1 & Dept 21 \\
+\midrule
+Nodes                         & 1005  & 109   & 92    & 65    & 61    \\
+Edges (directed)              & 24929 & 1167  & 1506  & 502   & 601   \\
+Density                       & 0.025 & 0.099 & 0.180 & 0.121 & 0.164 \\
+Reciprocity                   & 0.711 & 0.723 & 0.708 & 0.681 & 0.819 \\
+Mean in/out degree            & 24.81 & 10.71 & 16.37 & 7.72  & 9.85  \\
+LCC share of nodes            & 0.981 & 0.927 & 0.967 & 0.862 & 0.754 \\
+Largest SCC share             & 0.799 & 0.789 & 0.859 & 0.585 & 0.525 \\
+Transitivity                  & 0.267 & 0.424 & 0.457 & 0.545 & 0.665 \\
+Avg.\ clustering $C$          & 0.407 & 0.471 & 0.520 & 0.587 & 0.660 \\
+Random avg.\ clustering $C_{rand}$ & 0.033 & 0.147 & 0.249 & 0.213 & 0.344 \\
+Avg.\ shortest path $L$       & 2.587 & 2.165 & 1.830 & 2.450 & 1.788 \\
+Random avg.\ shortest path $L_{rand}$ & 2.296 & 1.948 & 1.754 & 1.852 & 1.660 \\
+Diameter                      & 7     & 5     & 4     & 5     & 4     \\
+$\sigma$                      & 10.84 & 2.88  & 2.00  & 2.08  & 1.78  \\
+$\omega$                      & --    & $0.063$ & $0.063$ & $-0.106$ & $-0.014$ \\
+\bottomrule
+\end{tabular}
+\caption{Structural measures of the whole network and of the four largest
+departments. Density, reciprocity and SCC share use the directed network;
+transitivity uses the whole undirected (OR) network; average clustering, path
+lengths, diameter, $\sigma$ and $\omega$ use the undirected largest connected
+component. Random baselines average ten $G(n,m)$ networks of the same size.
+$\omega$ was not computed for the whole network because of its computing time.}
+\label{tab:structure}
+\end{table}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{degree_distribution.png}
+\caption{In-degree (left) and out-degree (right) distributions on log-log
+axes for the whole network (blue) and the four largest departments (other
+colours; ``dept4'' = Department~4). Members with degree 0 are not shown. The
+whole network has a long tail: a few members have more than 100 contacts.}
+\label{fig:degree}
+\end{figure}
+
+% ------------------------------------------------------------------
+\subsection{Central actors and bridges (RQ2)}
+\label{sec:centrality}
+% TODO (Person 2)
+
+% ------------------------------------------------------------------
+\subsection{Departments as communication boundaries (RQ3)}
+\label{sec:departments}
+
+To answer RQ3 we look at the department boundary from three sides: whether
+members e-mail their own department more than chance (H1--H3), whether the
+groups that form from the e-mails match the departments (H4, H5), and whether
+e-mails across departments differ from e-mails inside them (H6). H1, H2, H4
+and H6 are tested against null models (Table~\ref{tab:rq3}): shuffled
+department labels, rewired networks that keep each member's number of contacts,
+or shuffled communities. H3 and H5 are descriptive.
+
+\textbf{H1: members prefer their own department.} If departments are
+boundaries, most e-mails should stay inside them. About one edge in three
+(34.7\%) joins two members of the same department, while only one in twenty
+(4.7\%) would if e-mails ignored departments. Two colleagues
+from the same department are about eleven times more likely to be connected
+than two from different departments. The assortativity coefficient
+\cite{newman2003}, which is 0 when people mix at random, confirms this with a
+value of 0.31. We considered a $\chi^2$ test, but dropped it because it
+treats e-mail links as independent, which they are not. Instead we used the
+Quadratic Assignment Procedure (QAP) \cite{krackhardt1988}: it correlates the e-mail matrix with a matrix that marks
+same-department pairs, then shuffles the departments 5{,}000 times. No shuffle
+came close to the observed correlation, so the preference is significant
+($p=0.0002$). The boundary is not closed, however: two thirds of all edges
+still cross departments.
+
+\textbf{H2: some departments are much more closed than others.} Next we asked
+\emph{which} departments are closed. The E--I index \cite{krackhardtstern1988} compares a department's
+external and internal edges in the undirected network: it is $-1$ if all edges stay inside and $+1$ if
+all go outside. Small departments have few possible partners, so
+Figure~\ref{fig:ei} compares each department with its value under random
+e-mailing. Of the 35 departments with at least five members, 34 are
+significantly more closed than this baseline (Benjamini--Hochberg adjusted
+$p<0.05$ \cite{benjamini1995}).
+Department~14 is the only one with more internal than external edges and
+behaves like a silo; departments~17 and~7 come close. The exception at the
+other end is department~31: its 8 members have no edge among themselves
+(E--I $=1.00$), so for them the department is no boundary at all. The other
+departments closest to random mixing are also small (5 to 13 members), where
+few internal edges are possible. Among departments with at least 20 members,
+the most open are 23, 6 and~36, with an E--I of about 0.90 against 0.97--0.98
+expected; in departments~23 and~6, 8 and 11 members write to no one in their
+own department. Department size and the gap between observed and expected
+E--I are strongly correlated (Spearman $\rho=-0.81$), but for the same reason
+this mainly reflects size.
+
+\textbf{H3: who is outside a department's component.} Section~\ref{sec:structure}
+found many members of departments~21 and~1 outside the largest component of
+their department network. In department~21, 10 of these 15 members e-mail only
+other departments and 5 send no e-mail at all; in department~1, the 9 members
+split equally between small separate groups, contacts outside the department,
+and no e-mail. Contact with other departments thus explains most of the gap in
+department~21, but only a third of it in department~1.
+
+\textbf{H4: e-mail groups join departments together.} If departments were the
+real units of communication, a method that sees only the e-mails should
+rediscover them. With seed 42, the Louvain method \cite{blondel2008} finds 9 communities
+(7 to 9 over 20 seeds) plus the 19 isolated members, with a modularity much higher than in random networks
+with the same degrees. The 42 departments, used as groups, reach 70\% of this
+modularity: a large part of the community structure, but not all. Figure~\ref{fig:communities} shows why. Each department mostly stays
+inside one community (86\% of its members on average), but most communities
+join many departments; the largest joins 27. Only two communities are almost a
+single department (purity above 0.95): C7 and C8, made of departments~14
+and~17, the two most closed departments in H2. The informal
+groups are thus coarser than the formal ones: they combine departments rather
+than cut across them. The agreement is moderate: NMI 0.60 and ARI 0.36
+\cite{danon2005,hubert1985} for seed 42, which is one of the best of 20 seeds
+(medians 0.58 and 0.31; ranges in Table~\ref{tab:rq3}). The exact communities
+therefore depend on the seed, but every run shows the same moderate match, far
+above shuffled communities.
+
+\textbf{H5: a few department pairs and one hub department.} Counting the edges
+between departments, three quarters of the pairs (641 of 861) exchange some e-mail, but
+half of all cross-department edges fall in only 61 pairs. These busy pairs
+often share a Louvain community (both departments have most members in it): 41\%
+of the 61 busiest pairs do, twice the 22\% of all connected pairs, and so do 7
+of the 10 busiest pairs without department~36, such as departments~4 and~5 or~21
+and~22. Intense contact between departments thus helps explain why communities
+merge them. Department~36 does not fit this pattern: with 2\% of the members, it takes part in 23\% of all
+cross-department edges and writes to 40 of the 41 other departments, like a
+service unit for the whole institution (see Section~\ref{sec:centrality}).
+
+\textbf{H6: links across departments are less often two-way.} Finally, a
+boundary can change the kind of communication, not only its amount. Splitting
+the reciprocity of Section~\ref{sec:structure}, 75\% of links inside
+departments are reciprocated (the other member has also written at least once),
+against 69\% across departments. The difference is
+larger than in all 5{,}000 shuffles ($p=0.0002$): contact between departments is
+more often one-way.
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{llrrrr}
+\toprule
+ & Measure & Observed & Null mean & $p$ & 20 seeds \\
+\midrule
+H1 & Within-department share (directed) & 0.347 & 0.047    & 0.0002 & -- \\
+H1 & Assortativity by department          & 0.314 & $-0.002$ & 0.0002 & -- \\
+H1 & QAP correlation $r$                  & 0.226 & 0.000    & 0.0002 & -- \\
+H2 & E--I index, whole network (undir.) & 0.329 & 0.907    & 0.0002 & -- \\
+H4 & Modularity $Q$, Louvain              & 0.413 & 0.122    & 0.0099 & 0.40--0.42 \\
+H4 & Modularity $Q$, departments          & 0.288 & $-0.004$ & 0.0099 & -- \\
+H4 & NMI, communities vs departments      & 0.596 & 0.062    & 0.0010 & 0.53--0.60 \\
+H4 & ARI, communities vs departments      & 0.355 & 0.000    & -- & 0.24--0.36 \\
+H6 & Reciprocity within / between         & 0.752 / 0.689 & --  & 0.0002 & -- \\
+\bottomrule
+\end{tabular}
+\caption{Tests for RQ3. Null models: 5{,}000 permutations of department labels
+(H1, H2, H6), 100 degree-preserving
+rewired networks ($Q$), 1{,}000 shuffled community assignments (NMI). Louvain: resolution 1; Observed = seed 42; last column:
+seeds 42--61. One-sided $p$-values; 0.0002 and 0.0099 are the
+smallest values these numbers of permutations allow. H1 and H6 use the 24{,}929
+directed edges, E--I and $Q$ the 16{,}064 undirected (OR) edges. Undirected, the
+within-department share is 0.336 (E--I $=1-2\times0.336$), below 0.347 because
+reciprocated pairs, more common within departments (H6), count twice as
+directed edges.}
+\label{tab:rq3}
+\end{table}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.72\textwidth]{fig_5_3_EI_departments.png}
+\caption{Observed E--I index (dots) of the 35 departments with at least five
+members, against the range expected under random mixing (grey, 95\% of
+permutations). Dots far to the left of their grey line are departments much
+more closed than chance.}
+\label{fig:ei}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.72\textwidth]{fig_5_3_departments_vs_communities.png}
+\caption{Share of each department's members (rows) in each Louvain community
+(columns), isolated members excluded. Most rows have one dark cell (departments
+stay together), but many columns have several (communities merge
+departments).}
+\label{fig:communities}
+\end{figure}
+
+
+
+\section{Conclusion}
+\label{conclusion}
+
+\subsection{RQ1: network structure}
+The e-mail network of the institution is a small-world network: members form
+close groups, yet, ignoring the direction of e-mails, two connected members are
+on average less than three steps apart, and most e-mail links go both ways.
+This structure can support both teamwork inside groups and the fast spread of
+information in the whole institution. The four largest departments share the
+same basic pattern: they are small-world and highly reciprocal. They differ,
+however, in how clustered they are compared with chance (department~4 the
+most, department~21 the least) and in how connected they are: in
+departments~1 and~21 only about half of the members can reach each other by
+following e-mails. Department density is four to seven times the density of the
+institution, and in department~21 one member in six (10 of 61) e-mails only
+people of other departments. Departments therefore matter for communication,
+but they do not contain all of it.
+
+% TODO 6.2 (Person 2)
+
+\subsection{RQ3: departments as boundaries}
+Departments are real but permeable boundaries of communication. A member is
+about eleven times more likely to e-mail a colleague of the same department,
+34 of the 35 tested departments are more closed than chance, and links
+inside departments are more often two-way. Yet two thirds of the e-mail links
+cross departments, and the groups that emerge from the e-mails only partly
+match the departments: they keep most departments together but merge them into
+a few larger blocks, often along the department pairs that e-mail each
+other most. Closure also varies: department~14 works almost as a
+silo, while department~31 shows no boundary at all and large departments
+such as 6 and~23 are almost open. The formal structure
+explains a large part, but not all, of the informal one.
+
+
+\section{Critique}
+\label{critique}
+
+\subsection{RQ1: network structure}
+This part of the study has three limits. First, the network only records
+whether two people exchanged at least one e-mail over the whole period, so one
+single message counts as much as daily contact, and a short path in the network
+may not be possible in time order. A weighted network built from the version
+of the dataset with timestamps would show how strong and when each connection
+is. Second, the $G(n,m)$ random networks give every member a similar number of
+contacts, while real degrees are very uneven; random networks that keep the
+real degrees, as used for $\omega$, are a stricter baseline, but we could not
+compute them for the whole network because of the computing time. Third, the
+department networks are small (61--109 members) and keep only the e-mails
+inside each department, so their results are less certain and say nothing
+about contacts with other departments, which are studied in
+Section~\ref{sec:departments}.
+
+% TODO 7.2 (Person 2)
+
+\subsection{RQ3: departments as boundaries}
+Three limits apply. First, Louvain is randomised: the exact communities and their
+match with the departments vary between seeds (ARI 0.24--0.36), and modularity
+cannot detect groups below a certain size \cite{fortunato2007}, so another
+community method could draw different groups. Second, many departments are small: their E--I index is uncertain,
+seven departments were not tested, and NMI and ARI ignore the 19 isolated
+members. Third, QAP shows that sharing a department is associated with
+e-mailing, not why: colleagues may also share an office or a project, which
+the data does not record. Finally, all results come from a single
+institution.
+
+
+\begin{thebibliography}{99}
+\bibitem{benjamini1995} Y.~Benjamini, Y.~Hochberg. Controlling the false
+  discovery rate: a practical and powerful approach to multiple testing.
+  \emph{Journal of the Royal Statistical Society B}, 57(1):289--300, 1995.
+\bibitem{blondel2008} V.~D. Blondel, J.-L. Guillaume, R.~Lambiotte,
+  E.~Lefebvre. Fast unfolding of communities in large networks. \emph{Journal
+  of Statistical Mechanics}, P10008, 2008.
+\bibitem{borgatti2018} S.~P. Borgatti, M.~G. Everett, J.~C. Johnson.
+  \emph{Analyzing Social Networks}. Sage, 2018.
+\bibitem{danon2005} L.~Danon, A.~D\'iaz-Guilera, J.~Duch, A.~Arenas. Comparing
+  community structure identification. \emph{Journal of Statistical Mechanics},
+  P09008, 2005.
+\bibitem{fortunato2007} S.~Fortunato, M.~Barth\'elemy. Resolution limit in
+  community detection. \emph{PNAS}, 104(1):36--41, 2007.
+\bibitem{hubert1985} L.~Hubert, P.~Arabie. Comparing partitions. \emph{Journal
+  of Classification}, 2:193--218, 1985.
+\bibitem{krackhardt1988} D.~Krackhardt. Predicting with networks:
+  nonparametric multiple regression analysis of dyadic data. \emph{Social
+  Networks}, 10(4):359--381, 1988.
+\bibitem{krackhardtstern1988} D.~Krackhardt, R.~N. Stern. Informal networks and
+  organizational crises: an experimental simulation. \emph{Social Psychology
+  Quarterly}, 51(2):123--140, 1988.
+\bibitem{leskovec2007} J.~Leskovec, J.~Kleinberg, C.~Faloutsos. Graph evolution:
+  densification and shrinking diameters. \emph{ACM Transactions on Knowledge
+  Discovery from Data}, 1(1), 2007.
+\bibitem{newman2003} M.~E.~J. Newman. Mixing patterns in networks.
+  \emph{Physical Review E}, 67:026126, 2003.
+\bibitem{newman2018} M.~Newman. \emph{Networks}. Oxford University Press, 2018.
+\bibitem{watts1998} D.~J. Watts, S.~H. Strogatz. Collective dynamics of
+  `small-world' networks. \emph{Nature}, 393:440--442, 1998.
+\bibitem{yin2017} H.~Yin, A.~R. Benson, J.~Leskovec, D.~F. Gleich. Local
+  higher-order graph clustering. In \emph{Proceedings of the 23rd ACM SIGKDD
+  International Conference on Knowledge Discovery and Data Mining}, 2017.
+\end{thebibliography}
+
+\end{document}
