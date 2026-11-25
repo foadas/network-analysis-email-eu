@@ -41,3 +41,16 @@ Data is **not** stored in the repo: the notebooks download it from SNAP.
 ## Tools
 
 Python with [NetworkX](https://networkx.org/) (measures), pandas, matplotlib; Gephi (figures).
+
+## Hypothesis labels: report vs notebooks
+
+| Report | Notebook |
+|---|---|
+| H1.1 small-world vs degree-preserving null | `NA_01_structure_RQ1.ipynb`, Step 10 |
+| H1.2 reciprocity vs degree-preserving null | `NA_01_structure_RQ1.ipynb`, Step 10 |
+| H3.1 members prefer their own department | `NA_03_RQ3.ipynb`, H1 |
+| H3.2 departments more closed than chance (E–I) | `NA_03_RQ3.ipynb`, H3 |
+| H3.3 communities vs departments | `NA_03_RQ3.ipynb`, H2 (+ H2b stability/resolution) |
+| H3.4 reciprocity within vs between departments | `NA_03_RQ3.ipynb`, H5 |
+| Members outside department LCC (in 5.1) | `NA_03_RQ3.ipynb`, H4 |
+| Department pairs (descriptive) | `NA_03_RQ3.ipynb`, department pairs cell |
