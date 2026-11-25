@@ -15,12 +15,15 @@ its official departments with the way people actually communicate.
 ## Repository structure
 
 ```
-load_networks.py                  shared loader: everyone uses it to build the same networks
+load_networks.py                    shared loader: everyone uses it to build the same networks
 notebooks/
-  NA_01_structure_RQ1.ipynb       RQ1 (Section 5.1): network structure, small-world, degree distribution
+  NA_01_structure_RQ1.ipynb         RQ1 (Section 5.1): structure, degree-preserving tests, triad census
+  NA_03_RQ3.ipynb                   RQ3 (Section 5.3): departments as communication boundaries
 report/
-  main.tex                        report (LaTeX, official template, 3cm margins)
-  degree_distribution.png         Figure 1
+  report_full.tex / .pdf            the report (official template, 3cm margins) - MAIN FILE
+  degree_ccdf.png                   Figure 1
+  fig_5_3_departments_vs_communities.png   Figure 2
+  main.tex, person3_sections.tex    older drafts (superseded by report_full.tex)
 ```
 
 Data is **not** stored in the repo: the notebooks download it from SNAP.
@@ -40,7 +43,7 @@ Data is **not** stored in the repo: the notebooks download it from SNAP.
 
 ## Tools
 
-Python with [NetworkX](https://networkx.org/) (measures), pandas, matplotlib; Gephi (figures).
+Python with [NetworkX](https://networkx.org/) 3.7 (measures, null models), scikit-learn (NMI, ARI), NumPy and pandas, matplotlib (figures).
 
 ## Hypothesis labels: report vs notebooks
 
