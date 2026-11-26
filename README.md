@@ -18,12 +18,13 @@ its official departments with the way people actually communicate.
 load_networks.py                    shared loader: everyone uses it to build the same networks
 notebooks/
   NA_01_structure_RQ1.ipynb         RQ1 (Section 5.1): structure, degree-preserving tests, triad census
+  NA_02_RQ2.ipynb                   Section 3 dataset table + RQ2 (Section 5.2): centrality, bridges
   NA_03_RQ3.ipynb                   RQ3 (Section 5.3): departments as communication boundaries
 report/
   report_full.tex / .pdf            the report (official template, 3cm margins) - MAIN FILE
-  degree_ccdf.png                   Figure 1
-  fig_5_3_departments_vs_communities.png   Figure 2
-  main.tex, person3_sections.tex    older drafts (superseded by report_full.tex)
+  *.png                             figures
+  main.tex, person2_sections.tex,
+  person3_sections.tex              older drafts (merged into report_full.tex)
 ```
 
 Data is **not** stored in the repo: the notebooks download it from SNAP.
