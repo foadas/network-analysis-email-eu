@@ -13,8 +13,6 @@
 \usepackage{booktabs}   % nicer tables
 \usepackage{graphicx}   % figures
 \usepackage{placeins}   % \FloatBarrier keeps floats in their section
-\usepackage{url}
-\urlstyle{same}
 \setlength\parskip{4pt}
 \renewcommand{\topfraction}{0.85}
 \renewcommand{\textfraction}{0.1}
@@ -101,7 +99,8 @@ It removes the 642 self-loops (leaving 24{,}929 of 25{,}571 edges) and keeps
 isolated members. When a measure needs an undirected network, two members are
 linked if at least one e-mailed the other (the OR rule). All random seeds
 derive from 42. We used Python with NetworkX 3.7 (scikit-learn for NMI and
-ARI), matplotlib and the ForceAtlas2 layout \cite{jacomy2014}.
+ARI), matplotlib and the ForceAtlas2 layout \cite{jacomy2014}. Our notebooks
+are public at github.com/foadas/network-analysis-email-eu.
 
 \begin{table}[htbp]
 \centering
@@ -584,11 +583,6 @@ associated with e-mailing, not why; colleagues may also share an office or a
 project, which the data does not record. Finally, all results come from a
 single institution.
 
-
-\section*{Data and Code Availability}
-The dataset and all our code, notebooks and results are publicly available:\\
-Dataset (SNAP): \url{https://snap.stanford.edu/data/email-Eu-core.html}\\
-Code and results: \url{https://github.com/foadas/network-analysis-email-eu}
 
 \begin{thebibliography}{99}
 \bibitem{benjamini1995} Y.~Benjamini, Y.~Hochberg. Controlling the false
